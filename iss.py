@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# HAVE NOT STARTED THIS YET
-__author__ = '???'
+# just was able to work on it
+# __author__ = 'Swavae with some help from Zach'
 
 import json
 import turtle 
