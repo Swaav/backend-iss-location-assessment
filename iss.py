@@ -3,78 +3,21 @@
 # __author__ = 'Swavae with some help from Zach'
 
 import json
-import turtle 
+import turtle
 import urllib.request
 import time
 import requests
-
-url = 'http://api.open-notify.org/astros.json'
-response = urllib.request.urlopen(url)
-result = json.loads(response.read())
-print('people in space: ', result['number'])
-
-people = result['people']
-print(people)
-
-for p in people: 
-    print(p['name'])
-
-url = 'http://api.open-notify.org/iss-now.json'
-response = urllib.request.urlopen(url)
-result = json.loads(response.read())
-
-print (result)
-
-location = result['iss_position']
-lat = location['latitude']
-lon = location['longitude']
-print('Latitude: ', lat)
-print('Longitude ', lon)
-
-# screen = turtle.Screen()
-# screen.setup(720, 360)
-# screen.setworldcoordinates(-180, -90, 180, 90)
-# screen.bgpic('map.gif')
-
-# screen.register_shape('iss.gif')
-# iss = turtle.Turtle()
-# iss.shape('iss.gif')
-# iss.setheading(90)
-
-# iss.penup()
-# iss.goto(lon, lat)
-
-#spaceCenter(HOUSTON)
-lat = 29.5502
-lon = -95.097
-
-location = turtle.Turtle()
-location.penup()
-location.color('yellow')
-location.goto(lon,lat)
-location.dot(5)
-location.hideturtle()
-
-url = 'http://api.open-notify.org/iss-pass.json'
-url = url + '?lat=' + str(lat) + '&lon=' + str(lon)
-response = urllib.request.urlopen(url)
-result = json.loads(response.read())
-print(result)
-
-over = result['response'][1]['risetime']
-# print(over)
-
-style = ('Arial', 6, 'bold')
-location.write(time.ctime(over), font=style)
 
 
 def data_collector():
     crew = requests.get('http://api.open-notify.org/astros.json')
     dictionary = crew.text
     dictionary = json.loads(dictionary)
+    print('people in space: ', dictionary['number'])
     for person in dictionary['people']:
         print('{} is on the ISS orbiting the Earth'.format(
             person['name']))
+
 
 def get_position():
     pos = requests.get(
@@ -87,6 +30,7 @@ def get_position():
           ' latitude and ' + str(current_pos['latitude']) + ' longitude')
     return (float(current_pos['longitude']), float(current_pos['latitude']))
 
+
 def indy_pass():
     r = requests.get(
         "http://api.open-notify.org/iss-pass.json?lat=40&lon=-86.1349")
@@ -95,6 +39,7 @@ def indy_pass():
     over_indy = is_over['response'][0]
     next_pass = time.ctime(over_indy['risetime'])
     return 'The ISS will pass over Indy next at: {}'.format(next_pass)
+
 
 def burgle_turts(iss_position, next_pass):
     new_screen = turtle.Screen()
@@ -116,10 +61,13 @@ def burgle_turts(iss_position, next_pass):
     msg.write(next_pass, True, align='center', font=('Arial', 25, 'normal'))
     new_screen.exitonclick()
 
+
 def main():
     data_collector()
     pos = get_position()
     next_pass = indy_pass()
     burgle_turts(pos, next_pass)
+
+
 if __name__ == '__main__':
     main()
